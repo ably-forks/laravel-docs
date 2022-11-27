@@ -252,13 +252,9 @@ npm run dev
 > **Note**  
 > To learn more about compiling your application's JavaScript assets, please consult the documentation on [Vite](/docs/{{version}}/vite).
 
-### Additional supported features (official ably client)
+### Configure advanced features
 
-**1. Update token expiry. Default: 3600 seconds (1 hr)**
-- Update`ABLY_TOKEN_EXPIRY` in `.env` file. 
-- Update `ably` section under `config/broadcasting.php` with `'token_expiry' => env('ABLY_TOKEN_EXPIRY', 3600)`
-
-**2. Modify channel capability**
+**1. Modify private/presence channel capability. Default: Full capability**
 - Channel access can be changed as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations)
 ```php
   // file - routes/channels.php
@@ -274,9 +270,13 @@ npm run dev
   });
 ```
 
-**3. Disable public channels**
+**2. Disable public channels. Default: false**
 - Update `ABLY_DISABLE_PUBLIC_CHANNELS`, set as **true** in `.env` file. 
 - Update `ably` section under `config/broadcasting.php` with `'disable_public_channels' => env('ABLY_DISABLE_PUBLIC_CHANNELS', false)`
+
+**3. Update token expiry. Default: 3600 seconds (1 hr)**
+- Update `ABLY_TOKEN_EXPIRY` in `.env` file. 
+- Update `ably` section under `config/broadcasting.php` with `'token_expiry' => env('ABLY_TOKEN_EXPIRY', 3600)`
 
 <br/>
 
