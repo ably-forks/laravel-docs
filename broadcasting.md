@@ -134,7 +134,7 @@ Next, you will need to change your broadcast driver to `ably` in your `.env` fil
 BROADCAST_DRIVER=ably
 ```
 
-Finally, you are ready to install and configure [Laravel Echo](#client-side-installation), which will receive the broadcast events on the client-side.
+Finally, you are ready to install and configure [Ably Laravel Echo](#client-ably), which will receive the broadcast events on the client-side.
 
 <a name="open-source-alternatives"></a>
 ### Open Source Alternatives
@@ -209,16 +209,16 @@ window.Echo = new Echo({
 <a name="client-ably"></a>
 ### Ably
 
-[Laravel Echo](https://github.com/laravel/echo) is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. You may install Echo via the NPM package manager. In this example, we will also install the official `ably` package:
+[Ably Laravel Echo](https://github.com/ably-forks/echo/) is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. Ably is maintaining a fork of the official laravel-echo module which allows you to use the official [ably-js](https://github.com/ably/ably-js) SDK. In this example, we will also install the official `ably` package:
 
 ```shell
-npm install --save-dev laravel-echo ably
-`````
+npm install @ably/laravel-echo ably
+```
 
 Once Echo is installed, you are ready to create a fresh Echo instance in your applications JavaScript. A great place to do this is at the bottom of the `resources/js/bootstrap.js` file that is included with the Laravel framework. By default, an example Echo configuration is already included in this file; however, the default configuration in the bootstrap.js file is intended for Pusher. You may copy the configuration below to transition your configuration to Ably.
 
 ```js
-import Echo from 'laravel-echo';
+import Echo from '@ably/laravel-echo';
 import * as Ably from 'ably';
 
 window.Ably = Ably;
