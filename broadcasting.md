@@ -276,14 +276,19 @@ npm run dev
 ```
 
 **2. Disable public channels. Default: false**
-- Update `ABLY_DISABLE_PUBLIC_CHANNELS`, set as **true** in `.env` file. 
-- Update `ably` section under `config/broadcasting.php` with `'disable_public_channels' => env('ABLY_DISABLE_PUBLIC_CHANNELS', false)`
-
-**3. Update token expiry. Default: 3600 seconds (1 hr)**
-- Update `ABLY_TOKEN_EXPIRY` in `.env` file. 
-- Update `ably` section under `config/broadcasting.php` with `'token_expiry' => env('ABLY_TOKEN_EXPIRY', 3600)`
-
-<br/>
+- Set `ABLY_DISABLE_PUBLIC_CHANNELS` as **true** in **.env** file.
+```dotenv
+    ABLY_DISABLE_PUBLIC_CHANNELS=true
+```
+- Update ably section under `config/broadcasting.php` with
+```php
+        'ably' => [
+            'driver' => 'ably',
+            'key' => env('ABLY_KEY'),
+            'disable_public_channels' => env('ABLY_DISABLE_PUBLIC_CHANNELS', false)
+        ],
+```
+**Note :** For more information about other features, please take a look at [configure advanced features](https://github.com/ably/laravel-broadcaster#configure-advanced-features).
 
 > ### **Deprecated (Using ably-pusher adapter)** 
 >In this example, we will install the `pusher-js` package.
@@ -319,20 +324,9 @@ npm run dev
 > Update `ably` section under `config/broadcasting.php` with `'pusher_adapter' => env('ABLY_PUSHER_ADAPTER', false)`
 
 <a name="migrate-pusher-to-ably"></a>
-### Migrating from deprecated ably-pusher adapter to ably
-- The latest Ably broadcaster is fully compatible with the deprecated Ably-Pusher broadcaster.
--  The only difference is for **Leaving the channel**, you should use [Ably Channel Namespaces](https://ably.com/docs/general/channel-rules-namespaces) conventions
-```js
-Echo.channel('channel1').leaveChannel("public:channel1")
-Echo.private('channel2').leaveChannel("private:channel2")
-Echo.join('channel3').leaveChannel("presence:channel3")
-```
-instead of [Pusher Channel Conventions](https://pusher.com/docs/channels/using_channels/channels/#channel-types)
-```js
-Echo.channel('channel1').leaveChannel("channel1")
-Echo.private('channel2').leaveChannel("private-channel2")
-Echo.join('channel3').leaveChannel("presence-channel3")
-```
+### Migrating from pusher to ably
+- The new Ably broadcaster is compatible with the [pusher](#pusher-channels), old Ably Broadcaster and [pusher compatible open source broadcasters](#open-source-alternatives).
+- To migrate properly, follow the [steps mentioned here](https://github.com/ably/laravel-broadcaster#migrating-from-pusherpusher-compatible-broadcasters).
 
 <a name="concept-overview"></a>
 ## Concept Overview
