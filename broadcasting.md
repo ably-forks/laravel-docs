@@ -280,7 +280,7 @@ npm run dev
 **2. Disable public channels. Default: false**
 - Set `ABLY_DISABLE_PUBLIC_CHANNELS` as **true** in **.env** file.
 ```dotenv
-    ABLY_DISABLE_PUBLIC_CHANNELS=true
+ABLY_DISABLE_PUBLIC_CHANNELS=true
 ```
 - Update ably section under `config/broadcasting.php` with
 ```php
