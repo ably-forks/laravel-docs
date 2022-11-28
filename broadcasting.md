@@ -9,6 +9,7 @@
 - [Client Side Installation](#client-side-installation)
     - [Pusher Channels](#client-pusher-channels)
     - [Ably](#client-ably)
+    - [Migrating from Pusher to Ably](#migrate-pusher-to-ably)
 - [Concept Overview](#concept-overview)
     - [Using An Example Application](#using-example-application)
 - [Defining Broadcast Events](#defining-broadcast-events)
@@ -52,7 +53,7 @@ The core concepts behind broadcasting are simple: clients connect to named chann
 <a name="supported-drivers"></a>
 #### Supported Drivers
 
-By default, Laravel includes two server-side broadcasting drivers for you to choose from: [Pusher Channels](https://pusher.com/channels) and [Ably](https://ably.io). However, community driven packages such as [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction) and [soketi](https://docs.soketi.app/) provide additional broadcasting drivers that do not require commercial broadcasting providers.
+By default, Laravel includes two server-side broadcasting drivers for you to choose from: [Pusher Channels](https://pusher.com/channels) and [Ably](https://ably.com). However, community driven packages such as [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction) and [soketi](https://docs.soketi.app/) provide additional broadcasting drivers that do not require commercial broadcasting providers.
 
 > {tip} Before diving into event broadcasting, make sure you have read Laravel's documentation on [events and listeners](/docs/{{version}}/events).
 
@@ -108,19 +109,31 @@ The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) and [
 <a name="ably"></a>
 ### Ably
 
-If you plan to broadcast your events using [Ably](https://ably.io), you should install the Ably PHP SDK using the Composer package manager:
+If you plan to broadcast your events using [Ably](https://ably.com), you should install the Ably Laravel Broadcaster using the Composer package manager:
 
-    composer require ably/ably-php
+```shell
+composer require ably/laravel-broadcaster
+```
+
+> Deprecated - Use this instead, if you are using pusher-js client to connect with ably.
+>```
+> composer require ably/ably-php
+>```
 
 Next, you should configure your Ably credentials in the `config/broadcasting.php` configuration file. An example Ably configuration is already included in this file, allowing you to quickly specify your key. Typically, this value should be set via the `ABLY_KEY` [environment variable](/docs/{{version}}/configuration#environment-configuration):
 
-    ABLY_KEY=your-ably-key
+```ini
+ABLY_KEY=ROOT_API_KEY_COPIED_FROM_ABLY_WEB_DASHBOARD
+```
+> **Warning** - Do not expose **ABLY_KEY** to client code.
 
 Next, you will need to change your broadcast driver to `ably` in your `.env` file:
 
-    BROADCAST_DRIVER=ably
+```ini
+BROADCAST_DRIVER=ably
+```
 
-Finally, you are ready to install and configure [Laravel Echo](#client-side-installation), which will receive the broadcast events on the client-side.
+Finally, you are ready to install and configure [Ably Laravel Echo](#client-ably), which will receive the broadcast events on the client-side.
 
 <a name="open-source-alternatives"></a>
 ### Open Source Alternatives
@@ -188,45 +201,122 @@ window.Echo = new Echo({
 <a name="client-ably"></a>
 ### Ably
 
-[Laravel Echo](https://github.com/laravel/echo) is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. You may install Echo via the NPM package manager. In this example, we will also install the `pusher-js` package.
+[Ably Laravel Echo](https://github.com/ably-forks/echo/) is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. Ably is maintaining a fork of the official laravel-echo module which allows you to use the official [ably-js](https://github.com/ably/ably-js) SDK. In this example, we will also install the official `ably` package:
 
-You may wonder why we would install the `pusher-js` JavaScript library even though we are using Ably to broadcast our events. Thankfully, Ably includes a Pusher compatibility mode which lets us use the Pusher protocol when listening for events in our client-side application:
-
-```bash
-npm install --save-dev laravel-echo pusher-js
+```shell
+npm install @ably/laravel-echo ably
 ```
 
-**Before continuing, you should enable Pusher protocol support in your Ably application settings. You may enable this feature within the "Protocol Adapter Settings" portion of your Ably application's settings dashboard.**
-
-Once Echo is installed, you are ready to create a fresh Echo instance in your application's JavaScript. A great place to do this is at the bottom of the `resources/js/bootstrap.js` file that is included with the Laravel framework. By default, an example Echo configuration is already included in this file; however, the default configuration in the `bootstrap.js` file is intended for Pusher. You may copy the configuration below to transition your configuration to Ably:
+Once Echo is installed, you are ready to create a fresh Echo instance in your application's JavaScript. A great place to do this is at the bottom of the `resources/js/bootstrap.js` file that is included with the Laravel framework. By default, an example Echo configuration is already included in this file; however, the default configuration in the `bootstrap.js` file is intended for Pusher. You may copy the configuration below to transition your configuration to Ably.
 
 ```js
-import Echo from 'laravel-echo';
+import Echo from '@ably/laravel-echo';
+import * as Ably from 'ably';
 
-window.Pusher = require('pusher-js');
-
+window.Ably = Ably;
 window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_ABLY_PUBLIC_KEY,
-    wsHost: 'realtime-pusher.ably.io',
-    wsPort: 443,
-    disableStats: true,
-    encrypted: true,
+    broadcaster: 'ably',
+});
+
+window.Echo.connector.ably.connection.on(stateChange => {
+    if (stateChange.current === 'connected') {
+        console.log('connected to ably server');
+    }
 });
 ```
 
-Note that our Ably Echo configuration references a `MIX_ABLY_PUBLIC_KEY` environment variable. This variable's value should be your Ably public key. Your public key is the portion of your Ably key that occurs before the `:` character.
+You can set additional ably-js [clientOptions](https://ably.com/docs/api/realtime-sdk?lang=javascript#client-options) when creating an `Echo` instance.
 
+```js
+    broadcaster: 'ably',
+    authEndpoint: 'http://www.localhost:8000/broadcasting/auth', // absolute or relative url to laravel-server 
+    realtimeHost: 'realtime.ably.com',
+    restHost: 'rest.ably.com',
+    port: '80',
+    echoMessages: true // By default self-echo for published message is false
+```
 Once you have uncommented and adjusted the Echo configuration according to your needs, you may compile your application's assets:
 
     npm run dev
 
 > {tip} To learn more about compiling your application's JavaScript assets, please consult the documentation on [Laravel Mix](/docs/{{version}}/mix).
 
+### Additional supported features
+
+**1. Modify private/presence channel capability. Default: Full capability**
+- User channel access (uc-access) can be changed as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations)
+```php
+  // file - routes/channels.php
+  // User authentication is allowed for private/presence channel returning truthy values and denied for falsy values.
+  
+  // for private channel
+  Broadcast::channel('channel1', function ($user) {
+      return ['uc-access' => ["subscribe", "history"]];
+  });
+  
+  // for presence channel
+  Broadcast::channel('channel2', function ($user) {
+      return ['id' => $user->id, 'name' => $user->name, 'uc-access' => ["subscribe", "presence"]];
+  });
+```
+
+**2. Disable public channels. Default: false**
+- Set `ABLY_DISABLE_PUBLIC_CHANNELS` as `true` in `.env` file.
+```dotenv
+ABLY_DISABLE_PUBLIC_CHANNELS=true
+```
+- Update ably section under `config/broadcasting.php` with
+```php
+        'ably' => [
+            'driver' => 'ably',
+            'key' => env('ABLY_KEY'),
+            'disable_public_channels' => env('ABLY_DISABLE_PUBLIC_CHANNELS', false)
+        ],
+```
+**Note :** For more information about other features, please take a look at [configure advanced features](https://github.com/ably/laravel-broadcaster#configure-advanced-features).
+
+> ### **Deprecated (Using ably-pusher adapter)** 
+>In this example, we will install the `pusher-js` package.
+>
+>You may wonder why we would install the `pusher-js` JavaScript library even though we are using Ably to broadcast our events. Thankfully, Ably includes a Pusher compatibility mode which lets us use the Pusher protocol when listening for events in our client-side application:
+>
+>```shell
+>npm install --save-dev laravel-echo pusher-js
+>`````
+>
+>**Before continuing, you should enable Pusher protocol support in your Ably application settings. You may enable this feature within the "Protocol Adapter Settings" portion of your Ably application's settings dashboard.**
+>
+>Once Echo is installed, you are ready to create a fresh Echo instance in your application's JavaScript. A great place to do this is at the bottom of the `resources/js/bootstrap.js` file that is included with the Laravel framework. By default, an example Echo configuration is already included in this file; however, the default configuration in the `bootstrap.js` file is intended for Pusher. You may copy the configuration below to transition your configuration to Ably:
+>
+>```js
+>import Echo from 'laravel-echo';
+>
+>window.Pusher = require('pusher-js');
+>
+>window.Echo = new Echo({
+>    broadcaster: 'pusher',
+>    key: process.env.VITE_ABLY_PUBLIC_KEY,
+>    wsHost: 'realtime-pusher.ably.com',
+>    wsPort: 443,
+>    disableStats: true,
+>    encrypted: true,
+>});
+>```
+>
+>Note that our Ably Echo configuration references a `VITE_ABLY_PUBLIC_KEY` environment variable. This variable's value should be your Ably public key. Your public key is the portion of your Ably key that occurs before the `:` character.
+>
+> Set `ABLY_PUSHER_ADAPTER` as `true` in `.env` file. <br>
+> Update `ably` section under `config/broadcasting.php` with `'pusher_adapter' => env('ABLY_PUSHER_ADAPTER', false)`
+
+<a name="migrate-pusher-to-ably"></a>
+### Migrating from pusher to ably
+- The new Ably broadcaster is compatible with the [pusher](#pusher-channels), old Ably Broadcaster and [pusher compatible open source broadcasters](#open-source-alternatives).
+- To migrate properly, follow the [steps mentioned here](https://github.com/ably/laravel-broadcaster#migrating-from-pusherpusher-compatible-broadcasters).
+
 <a name="concept-overview"></a>
 ## Concept Overview
 
-Laravel's event broadcasting allows you to broadcast your server-side Laravel events to your client-side JavaScript application using a driver-based approach to WebSockets. Currently, Laravel ships with [Pusher Channels](https://pusher.com/channels) and [Ably](https://ably.io) drivers. The events may be easily consumed on the client-side using the [Laravel Echo](#client-side-installation) JavaScript package.
+Laravel's event broadcasting allows you to broadcast your server-side Laravel events to your client-side JavaScript application using a driver-based approach to WebSockets. Currently, Laravel ships with [Pusher Channels](https://pusher.com/channels) and [Ably](https://ably.com) drivers. The events may be easily consumed on the client-side using the [Laravel Echo](#client-side-installation) JavaScript package.
 
 Events are broadcast over "channels", which may be specified as public or private. Any visitor to your application may subscribe to a public channel without any authentication or authorization; however, in order to subscribe to a private channel, a user must be authenticated and authorized to listen on that channel.
 
