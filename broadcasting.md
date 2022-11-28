@@ -122,7 +122,7 @@ If you plan to broadcast your events using [Ably](https://ably.com), you should 
 composer require ably/laravel-broadcaster
 ```
 
-> Deprecated - Use this instead, if you are using pusher-client to connect with ably.
+> Deprecated - Use this instead, if you are using pusher-js client to connect with ably.
 >```
 > composer require ably/ably-php
 >```
@@ -132,6 +132,7 @@ Next, you should configure your Ably credentials in the `config/broadcasting.php
 ```ini
 ABLY_KEY=ROOT_API_KEY_COPIED_FROM_ABLY_WEB_DASHBOARD
 ```
+> **Warning** - Do not expose **ABLY_KEY** to client code.
 
 Next, you will need to change your broadcast driver to `ably` in your `.env` file:
 
