@@ -322,7 +322,7 @@ ABLY_DISABLE_PUBLIC_CHANNELS=true
 >
 >Note that our Ably Echo configuration references a `VITE_ABLY_PUBLIC_KEY` environment variable. This variable's value should be your Ably public key. Your public key is the portion of your Ably key that occurs before the `:` character.
 >
-> Set `ABLY_PUSHER_ADAPTER` as **true** in `.env` file. <br>
+> Set `ABLY_PUSHER_ADAPTER` as `true` in `.env` file. <br>
 > Update `ably` section under `config/broadcasting.php` with `'pusher_adapter' => env('ABLY_PUSHER_ADAPTER', false)`
 
 <a name="migrate-pusher-to-ably"></a>
