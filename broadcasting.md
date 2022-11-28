@@ -257,21 +257,22 @@ npm run dev
 > **Note**  
 > To learn more about compiling your application's JavaScript assets, please consult the documentation on [Vite](/docs/{{version}}/vite).
 
-### Configure advanced features
+### Additional supported features
 
 **1. Modify private/presence channel capability. Default: Full capability**
-- Channel access can be changed as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations)
+- User channel access (uc-access) can be changed as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations)
 ```php
   // file - routes/channels.php
-
-  // for private channel (Access is allowed for truthy values and denied for falsy values)
+  // User authentication is allowed for private/presence channel returning truthy values and denied for falsy values.
+  
+  // for private channel
   Broadcast::channel('channel1', function ($user) {
-      return ['capability' => ["subscribe", "history"]];
+      return ['uc-access' => ["subscribe", "history"]];
   });
   
   // for presence channel
   Broadcast::channel('channel2', function ($user) {
-      return ['id' => $user->id, 'name' => $user->name, 'capability' => ["subscribe", "presence"]];
+      return ['id' => $user->id, 'name' => $user->name, 'uc-access' => ["subscribe", "presence"]];
   });
 ```
 
