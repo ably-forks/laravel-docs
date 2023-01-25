@@ -179,6 +179,8 @@ Once you have uncommented and adjusted the Echo configuration according to your 
 - The new Ably broadcaster is compatible with the [pusher](#pusher-channels), old Ably Broadcaster and [pusher compatible open source broadcasters](#open-source-alternatives).
 - To migrate properly, follow the [steps mentioned here](https://github.com/ably/laravel-broadcaster#migrating-from-pusherpusher-compatible
 
+> Note - For more detailed documentation, please take a look at [ably-laravel-broadcaster](https://github.com/ably/laravel-broadcaster).
+
 ### Redis
 
 If you are using the Redis broadcaster, you should either install the phpredis PHP extension via PECL or install the Predis library via Composer:
