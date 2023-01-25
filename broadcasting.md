@@ -55,7 +55,7 @@ Before broadcasting any events, you will first need to register the `App\Provide
 <a name="driver-prerequisites"></a>
 ### Driver Prerequisites
 
-#### Pusher Channels
+### Pusher Channels
 
 If you are broadcasting your events over [Pusher Channels](https://pusher.com/channels), you should install the Pusher Channels PHP SDK using the Composer package manager:
 
@@ -83,7 +83,7 @@ Finally, you will need to change your broadcast driver to `pusher` in your `.env
 
     BROADCAST_DRIVER=pusher
 
-#### Ably Channels
+### Ably Channels
 
 If you plan to broadcast your events using [Ably](https://ably.com), you should install the Ably Laravel Broadcaster using the Composer package manager:
 
@@ -94,6 +94,7 @@ Next, you should configure your Ably credentials in the `config/broadcasting.php
     ABLY_KEY=ROOT_API_KEY_COPIED_FROM_ABLY_WEB_DASHBOARD
 
 > **Warning** - Do not expose **ABLY_KEY** to client code.
+
 Next, you will need to change your broadcast driver to `ably` in your `.env` file:
 
     BROADCAST_DRIVER=ably
@@ -109,10 +110,12 @@ Once Echo is installed, you are ready to create a fresh Echo instance in your ap
 ```js
 import Echo from '@ably/laravel-echo';
 import * as Ably from 'ably';
+
 window.Ably = Ably;
 window.Echo = new Echo({
     broadcaster: 'ably',
 });
+
 window.Echo.connector.ably.connection.on(stateChange => {
     if (stateChange.current === 'connected') {
         console.log('connected to ably server');
@@ -136,9 +139,9 @@ Once you have uncommented and adjusted the Echo configuration according to your 
 
 > {tip} To learn more about compiling your application's JavaScript assets, please consult the documentation on [Laravel Mix](/docs/{{version}}/mix).
 
-### Additional supported features
+**Additional supported features**
 
-**1. Modify private/presence channel capability. Default: Full capability**
+*1. Modify private/presence channel capability. Default: Full capability*
 - Channel access control rights are granted for each individual user separately using `ably-capability`. It defines list of access claims as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations).
 
 ```php
@@ -156,7 +159,7 @@ Once you have uncommented and adjusted the Echo configuration according to your 
   });
 ```
 
-**2. Disable public channels. Default: false**
+*2. Disable public channels. Default: false*
 - Set `ABLY_DISABLE_PUBLIC_CHANNELS` as `true` in `.env` file.
 
 
@@ -172,15 +175,17 @@ Once you have uncommented and adjusted the Echo configuration according to your 
 ```
 **Note :** For more information about other features, please take a look at [configure advanced features](https://github.com/ably/laravel-broadcaster#configure-advanced-features).
 
-#### Migrating from pusher to ably
+**Migrating from pusher to ably**
 - The new Ably broadcaster is compatible with the [pusher](#pusher-channels), old Ably Broadcaster and [pusher compatible open source broadcasters](#open-source-alternatives).
 - To migrate properly, follow the [steps mentioned here](https://github.com/ably/laravel-broadcaster#migrating-from-pusherpusher-compatible
 
-#### Pusher Compatible Laravel Websockets
+> Note - For more detailed documentation, please take a look at [ably-laravel-broadcaster](https://github.com/ably/laravel-broadcaster).
+
+### Pusher Compatible Laravel Websockets
 
 The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) is a pure PHP, Pusher compatible websocket package for Laravel. This package allows you to leverage the full power of Laravel broadcasting without an external websocket provider or Node. For more information on installing and using this package, please consult its [official documentation](https://beyondco.de/docs/laravel-websockets).
 
-#### Redis
+### Redis
 
 If you are using the Redis broadcaster, you should either install the phpredis PHP extension via PECL or install the Predis library via Composer:
 
@@ -194,7 +199,7 @@ The Redis broadcaster will broadcast messages using Redis' pub / sub feature; ho
 
 When the Redis broadcaster publishes an event, it will be published on the event's specified channel names and the payload will be a JSON encoded string containing the event name, a `data` payload, and the user that generated the event's socket ID (if applicable).
 
-#### Socket.IO
+### Socket.IO
 
 If you are going to pair the Redis broadcaster with a Socket.IO server, you will need to include the Socket.IO JavaScript client library in your application. You may install it via the NPM package manager:
 
@@ -213,7 +218,7 @@ Next, you will need to instantiate Echo with the `socket.io` connector and a `ho
 
 Finally, you will need to run a compatible Socket.IO server. Laravel does not include a Socket.IO server implementation; however, a community driven Socket.IO server is currently maintained at the [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server) GitHub repository.
 
-#### Queue Prerequisites
+### Queue Prerequisites
 
 Before broadcasting events, you will also need to configure and run a [queue listener](/docs/{{version}}/queues). All event broadcasting is done via queued jobs so that the response time of your application is not seriously affected.
 
