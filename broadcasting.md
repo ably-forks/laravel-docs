@@ -55,7 +55,7 @@ Before broadcasting any events, you will first need to register the `App\Provide
 <a name="driver-prerequisites"></a>
 ### Driver Prerequisites
 
-### Pusher Channels
+#### Pusher Channels
 
 If you are broadcasting your events over [Pusher Channels](https://pusher.com/channels), you should install the Pusher Channels PHP SDK using the Composer package manager:
 
@@ -83,7 +83,7 @@ Finally, you will need to change your broadcast driver to `pusher` in your `.env
 
     BROADCAST_DRIVER=pusher
 
-### Ably Channels
+#### Ably Channels
 
 If you plan to broadcast your events using [Ably](https://ably.com), you should install the Ably Laravel Broadcaster using the Composer package manager:
 
@@ -139,7 +139,7 @@ Once you have uncommented and adjusted the Echo configuration according to your 
 
 > {tip} To learn more about compiling your application's JavaScript assets, please consult the documentation on [Laravel Mix](/docs/{{version}}/mix).
 
-**Additional supported features**
+Additional supported features : 
 
 *1. Modify private/presence channel capability. Default: Full capability*
 - Channel access control rights are granted for each individual user separately using `ably-capability`. It defines list of access claims as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations).
@@ -175,13 +175,13 @@ Once you have uncommented and adjusted the Echo configuration according to your 
 ```
 **Note :** For more information about other features, please take a look at [configure advanced features](https://github.com/ably/laravel-broadcaster#configure-advanced-features).
 
-**Migrating from pusher to ably**
+Migrating from pusher to ably :
 - The new Ably broadcaster is compatible with the [pusher](#pusher-channels), old Ably Broadcaster and [pusher compatible open source broadcasters](#open-source-alternatives).
 - To migrate properly, follow the [steps mentioned here](https://github.com/ably/laravel-broadcaster#migrating-from-pusherpusher-compatible
 
 > Note - For more detailed documentation, please take a look at [ably-laravel-broadcaster](https://github.com/ably/laravel-broadcaster).
 
-### Redis
+#### Redis
 
 If you are using the Redis broadcaster, you should either install the phpredis PHP extension via PECL or install the Predis library via Composer:
 
