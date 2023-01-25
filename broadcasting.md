@@ -101,7 +101,7 @@ Next, you will need to change your broadcast driver to `ably` in your `.env` fil
 
 Finally, you are ready to install and configure Ably Laravel Echo, which will receive the broadcast events on the client-side.
 
-[Ably Laravel Echo](https://github.com/ably-forks/echo/) is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. Ably is maintaining a fork of the official laravel-echo module which allows you to use the official [ably-js](https://github.com/ably/ably-js) SDK. In this example, we will also install the official `ably` package:
+[Ably Laravel Echo](https://github.com/ably-forks/echo/) is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. This is a fork of [laravel-echo](https://github.com/laravel/echo) which allows you to use the official [Ably Javascript SDK](https://github.com/ably/ably-js). In this example, we will also install the official `ably` package:
 
     npm install @ably/laravel-echo ably
 
