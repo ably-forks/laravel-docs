@@ -85,7 +85,7 @@ Finally, you will need to change your broadcast driver to `pusher` in your `.env
 
 #### Ably Channels
 
-If you plan to broadcast your events using [Ably](https://ably.com), you should install the Ably Laravel Broadcaster using the Composer package manager:
+If you plan to broadcast your events using [Ably](https://ably.com), you should install the [Ably Laravel Broadcaster](https://github.com/ably/laravel-broadcaster) using the Composer package manager:
 
     composer require ably/laravel-broadcaster
 
@@ -142,7 +142,8 @@ Once you have uncommented and adjusted the Echo configuration according to your 
 Additional supported features :
 
 *1. Modify private/presence channel capability. Default: Full capability*
-- Channel access control rights are granted for each individual user separately using `ably-capability`. It defines list of access claims as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations).
+- Channel access control rights are granted for each individual user separately using `ably-capability`. 
+- It defines list of access claims as per [Channel Capabilities](https://ably.com/docs/core-features/authentication#capability-operations).
 
 ```php
   // file - routes/channels.php
@@ -179,7 +180,7 @@ Migrating from pusher to ably :
 - The new Ably broadcaster is compatible with the [pusher](#pusher-channels), old Ably Broadcaster and [pusher compatible open source broadcasters](#open-source-alternatives).
 - To migrate properly, follow the [steps mentioned here](https://github.com/ably/laravel-broadcaster#migrating-from-pusherpusher-compatible
 
-> Note - For more detailed documentation, please take a look at [ably-laravel-broadcaster](https://github.com/ably/laravel-broadcaster).
+> Note - For more detailed documentation, please take a look at [ably-broadcaster-readme](https://github.com/ably/laravel-broadcaster/blob/main/README.md).
 
 #### Pusher Compatible Laravel Websockets
 
